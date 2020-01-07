@@ -1,0 +1,46 @@
+{
+  "name": "jojo1981/php-types",
+  "description": "PHP types library which contains value classes which represent the php types",
+  "keywords": [
+    "type",
+    "types",
+    "validation"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "readme": "README.md",
+  "authors": [
+    {
+      "name": "Joost Nijhuis",
+      "email": "jnijhuis81@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": "^7.1"
+  },
+  "require-dev": {
+    "php-coveralls/php-coveralls": "^2.2",
+    "phpunit/phpunit": "^7.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Jojo1981\\PhpTypes\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Jojo1981\\PhpTypes\\TestSuite\\": "tests/"
+    }
+  },
+  "config": {
+    "bin-dir": "bin",
+    "sort-packages": true
+  },
+  "scripts": {
+    "test": [
+      "./bin/phpunit"
+    ]
+  }
+}
