@@ -53,7 +53,7 @@ class ClassTypeTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->type = new ClassType(new ClassName(__CLASS__));
+        $this->type = $this->createClassType(__CLASS__);
     }
 
     /**
@@ -64,7 +64,7 @@ class ClassTypeTest extends TestCase
     public function testWithNotExistingClass(): void
     {
         $this->expectExceptionObject(new TypeException('Class: `\NotExistingClass` doesn\'t exists'));
-        new ClassType(new ClassName('NotExistingClass'));
+        $this->createClassType('NotExistingClass');
     }
 
     /**
@@ -131,12 +131,12 @@ class ClassTypeTest extends TestCase
     public function testIsEqual(): void
     {
         $this->assertTrue($this->type->isEqual($this->type));
-        $this->assertTrue($this->type->isEqual(new ClassType(new ClassName(__CLASS__))));
+        $this->assertTrue($this->type->isEqual($this->createClassType((__CLASS__))));
 
         $this->assertFalse($this->type->isEqual(new ArrayType()));
         $this->assertFalse($this->type->isEqual(new BooleanType()));
         $this->assertFalse($this->type->isEqual(new CallableType()));
-        $this->assertFalse($this->type->isEqual(new ClassType(new ClassName(TestEntity::class))));
+        $this->assertFalse($this->type->isEqual($this->createClassType(TestEntity::class)));
         $this->assertFalse($this->type->isEqual(new FloatType()));
         $this->assertFalse($this->type->isEqual(new IntegerType()));
         $this->assertFalse($this->type->isEqual(new IterableType()));
@@ -159,12 +159,12 @@ class ClassTypeTest extends TestCase
     public function testIsAssignableType(): void
     {
         $this->assertTrue($this->type->isAssignableType($this->type));
-        $this->assertTrue($this->type->isAssignableType(new ClassType(new ClassName(__CLASS__))));
+        $this->assertTrue($this->type->isAssignableType($this->createClassType(__CLASS__)));
 
         $this->assertFalse($this->type->isAssignableType(new ArrayType()));
         $this->assertFalse($this->type->isAssignableType(new BooleanType()));
         $this->assertFalse($this->type->isAssignableType(new CallableType()));
-        $this->assertFalse($this->type->isAssignableType(new ClassType(new ClassName(TestEntity::class))));
+        $this->assertFalse($this->type->isAssignableType($this->createClassType(TestEntity::class)));
         $this->assertFalse($this->type->isAssignableType(new FloatType()));
         $this->assertFalse($this->type->isAssignableType(new IntegerType()));
         $this->assertFalse($this->type->isAssignableType(new IterableType()));
@@ -175,6 +175,30 @@ class ClassTypeTest extends TestCase
         $this->assertFalse($this->type->isAssignableType(new ResourceType()));
         $this->assertFalse($this->type->isAssignableType(new StringType()));
         $this->assertFalse($this->type->isAssignableType(new VoidType()));
+
+        $typeTestEntityInterface = $this->createClassType(InterfaceTestEntity::class);
+        $this->assertTrue($typeTestEntityInterface->isAssignableType($this->createClassType(InterfaceTestEntity::class)));
+        $this->assertTrue($typeTestEntityInterface->isAssignableType($this->createClassType(AbstractTestEntity::class)));
+        $this->assertTrue($typeTestEntityInterface->isAssignableType($this->createClassType(TestEntityBase::class)));
+        $this->assertTrue($typeTestEntityInterface->isAssignableType($this->createClassType(TestEntity::class)));
+
+        $typeAbstractTestEntity = $this->createClassType(AbstractTestEntity::class);
+        $this->assertFalse($typeAbstractTestEntity->isAssignableType($this->createClassType(InterfaceTestEntity::class)));
+        $this->assertTrue($typeAbstractTestEntity->isAssignableType($this->createClassType(AbstractTestEntity::class)));
+        $this->assertTrue($typeAbstractTestEntity->isAssignableType($this->createClassType(TestEntityBase::class)));
+        $this->assertTrue($typeAbstractTestEntity->isAssignableType($this->createClassType(TestEntity::class)));
+
+        $typeTestEntityBase = $this->createClassType(TestEntityBase::class);
+        $this->assertFalse($typeTestEntityBase->isAssignableType($this->createClassType(InterfaceTestEntity::class)));
+        $this->assertFalse($typeTestEntityBase->isAssignableType($this->createClassType(AbstractTestEntity::class)));
+        $this->assertTrue($typeTestEntityBase->isAssignableType($this->createClassType(TestEntityBase::class)));
+        $this->assertTrue($typeTestEntityBase->isAssignableType($this->createClassType(TestEntity::class)));
+
+        $typeTestEntity = $this->createClassType(TestEntity::class);
+        $this->assertFalse($typeTestEntity->isAssignableType($this->createClassType(InterfaceTestEntity::class)));
+        $this->assertFalse($typeTestEntity->isAssignableType($this->createClassType(AbstractTestEntity::class)));
+        $this->assertFalse($typeTestEntity->isAssignableType($this->createClassType(TestEntityBase::class)));
+        $this->assertTrue($typeTestEntity->isAssignableType($this->createClassType(TestEntity::class)));
     }
 
     /**
@@ -232,5 +256,16 @@ class ClassTypeTest extends TestCase
     public function testGetReflectionClass(): void
     {
         $this->assertEquals(new \ReflectionClass(__CLASS__), $this->type->getReflectionClass());
+    }
+
+    /**
+     * @param string $className
+     * @throws ValueException
+     * @throws TypeException
+     * @return ClassType
+     */
+    private function createClassType(string $className): ClassType
+    {
+        return new ClassType(new ClassName($className));
     }
 }

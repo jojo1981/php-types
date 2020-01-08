@@ -61,7 +61,7 @@ final class ClassType extends ObjectType
      */
     public function isAssignableType(TypeInterface $type): bool
     {
-        return $type instanceof self && $this->className->isEqual($type->getClassName());
+        return $type instanceof self && $this->isClassTypeAssignableToThisClassType($type);
     }
 
     /**
@@ -100,5 +100,19 @@ final class ClassType extends ObjectType
         if (!$className->exists()) {
             throw new TypeException(\sprintf('Class: `%s` doesn\'t exists', $className->getFqcn()));
         }
+    }
+
+    /**
+     * @param ClassType $type
+     * @return bool
+     */
+    private function isClassTypeAssignableToThisClassType(ClassType $type): bool
+    {
+        return $this->className->isEqual($type->getClassName())
+            || \is_subclass_of($type->getClassName()->getFqcn(), $this->className->getFqcn())
+            || \is_a($type->getClassName()->getFqcn(), $this->className->getFqcn());
+
+//        return $this->className->isEqual($type->getClassName())
+//            || \is_a($type->getClassName()->getFqcn(), $this->className->getFqcn());
     }
 }
