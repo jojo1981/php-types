@@ -9,6 +9,8 @@
  */
 namespace Jojo1981\PhpTypes;
 
+use function is_iterable;
+
 /**
  * @package Jojo1981\PhpTypes
  */
@@ -28,6 +30,6 @@ final class IterableType extends AbstractCompoundType
      */
     public function isAssignableValue($value): bool
     {
-        return \is_iterable($value);
+        return is_iterable($value);
     }
 }

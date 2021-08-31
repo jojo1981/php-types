@@ -9,6 +9,8 @@
  */
 namespace Jojo1981\PhpTypes;
 
+use function is_bool;
+
 /**
  * @package Jojo1981\PhpTypes
  */
@@ -28,6 +30,6 @@ final class BooleanType extends AbstractScalarType
      */
     public function isAssignableValue($value): bool
     {
-        return \is_bool($value);
+        return is_bool($value);
     }
 }

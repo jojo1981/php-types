@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of the jojo1981/php-types package
  *
@@ -11,6 +11,11 @@ namespace Jojo1981\PhpTypes;
 
 use Jojo1981\PhpTypes\Exception\TypeException;
 use Jojo1981\PhpTypes\Value\ClassName;
+use ReflectionClass;
+use ReflectionException;
+use function is_a;
+use function is_subclass_of;
+use function sprintf;
 
 /**
  * @package Jojo1981\PhpTypes
@@ -18,7 +23,7 @@ use Jojo1981\PhpTypes\Value\ClassName;
 final class ClassType extends ObjectType
 {
     /** @var ClassName */
-    private $className;
+    private ClassName $className;
 
     /**
      * @param ClassName $className
@@ -47,12 +52,12 @@ final class ClassType extends ObjectType
     }
 
     /**
-     * @throws \ReflectionException
-     * @return \ReflectionClass
+     * @throws ReflectionException
+     * @return ReflectionClass
      */
-    public function getReflectionClass(): \ReflectionClass
+    public function getReflectionClass(): ReflectionClass
     {
-        return new \ReflectionClass($this->className->getFqcn());
+        return new ReflectionClass($this->className->getFqcn());
     }
 
     /**
@@ -74,7 +79,7 @@ final class ClassType extends ObjectType
             return false;
         }
 
-        return \is_a($value, $this->className->getFqcn());
+        return is_a($value, $this->className->getFqcn());
     }
 
     /**
@@ -98,7 +103,7 @@ final class ClassType extends ObjectType
     private function assertClassName(ClassName $className): void
     {
         if (!$className->exists()) {
-            throw new TypeException(\sprintf('Class: `%s` doesn\'t exists', $className->getFqcn()));
+            throw new TypeException(sprintf('Class: `%s` doesn\'t exists', $className->getFqcn()));
         }
     }
 
@@ -109,10 +114,7 @@ final class ClassType extends ObjectType
     private function isClassTypeAssignableToThisClassType(ClassType $type): bool
     {
         return $this->className->isEqual($type->getClassName())
-            || \is_subclass_of($type->getClassName()->getFqcn(), $this->className->getFqcn())
-            || \is_a($type->getClassName()->getFqcn(), $this->className->getFqcn());
-
-//        return $this->className->isEqual($type->getClassName())
-//            || \is_a($type->getClassName()->getFqcn(), $this->className->getFqcn());
+            || is_subclass_of($type->getClassName()->getFqcn(), $this->className->getFqcn())
+            || is_a($type->getClassName()->getFqcn(), $this->className->getFqcn());
     }
 }

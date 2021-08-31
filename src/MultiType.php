@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of the jojo1981/php-types package
  *
@@ -10,6 +10,10 @@
 namespace Jojo1981\PhpTypes;
 
 use Jojo1981\PhpTypes\Exception\TypeException;
+use function array_reduce;
+use function array_values;
+use function count;
+use function sprintf;
 
 /**
  * @package Jojo1981\PhpTypes
@@ -17,7 +21,7 @@ use Jojo1981\PhpTypes\Exception\TypeException;
 final class MultiType extends AbstractPseudoType
 {
     /** @var TypeInterface[] */
-    private $types;
+    private array $types;
 
     /**
      * @param TypeInterface[] $types
@@ -26,8 +30,8 @@ final class MultiType extends AbstractPseudoType
     public function __construct(array $types)
     {
         $processTypes = static function (array $types) use (&$processTypes): array {
-            return \array_values(
-                \array_reduce(
+            return array_values(
+                array_reduce(
                     $types,
                     static function (array $resultTypes, $type) use (&$processTypes): array {
                         $currentTypes = $type instanceof MultiType ? $processTypes($type->getTypes()) : [$type];
@@ -108,7 +112,7 @@ final class MultiType extends AbstractPseudoType
     public function isEqual(TypeInterface $type): bool
     {
         if ($type instanceof self) {
-            if (\count($this->types) !== \count($type->getTypes())) {
+            if (count($this->types) !== count($type->getTypes())) {
                 return false;
             }
 
@@ -142,18 +146,18 @@ final class MultiType extends AbstractPseudoType
         if (empty($types)) {
             throw new TypeException('Invalid type values given, types can not be empty');
         }
-        if (\count($types) < 2) {
+        if (count($types) < 2) {
             throw new TypeException('Invalid type values given, types must contain at least 2 types');
         }
         foreach ($types as $type) {
             if (!($type instanceof TypeInterface)) {
-                throw new TypeException(\sprintf(
+                throw new TypeException(sprintf(
                     'Invalid types value given. Every element must be an instance of: %s.',
                     TypeInterface::class
                 ));
             }
             if ($type instanceof VoidType) {
-                throw new TypeException(\sprintf(
+                throw new TypeException(sprintf(
                     'Invalid types value given. Element of void type found, a multi type can not contain a %s.',
                     VoidType::class
                 ));

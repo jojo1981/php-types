@@ -9,6 +9,9 @@
  */
 namespace Jojo1981\PhpTypes;
 
+use Closure;
+use function is_object;
+
 /**
  * @package Jojo1981\PhpTypes
  */
@@ -28,10 +31,10 @@ class ObjectType extends AbstractCompoundType
      */
     public function isAssignableValue($value): bool
     {
-        if ($value instanceof \Closure) {
+        if ($value instanceof Closure) {
             return false;
         }
 
-        return \is_object($value);
+        return is_object($value);
     }
 }

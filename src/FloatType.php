@@ -9,6 +9,8 @@
  */
 namespace Jojo1981\PhpTypes;
 
+use function is_float;
+
 /**
  * @package Jojo1981\PhpTypes
  */
@@ -28,6 +30,6 @@ final class FloatType extends AbstractNumberType
      */
     public function isAssignableValue($value): bool
     {
-        return \is_float($value);
+        return is_float($value);
     }
 }

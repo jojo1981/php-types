@@ -9,9 +9,11 @@
  */
 namespace Jojo1981\PhpTypes\Exception;
 
+use DomainException;
+
 /**
  * @package Jojo1981\PhpTypes\Exception
  */
-class TypeException extends \DomainException
+class TypeException extends DomainException
 {
 }

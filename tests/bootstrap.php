@@ -7,18 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed in the root of the source code
  */
-namespace Jojo1981\PhpTypes;
 
-/**
- * @package Jojo1981\PhpTypes
- */
-abstract class AbstractNumberType extends AbstractScalarType
-{
-    /**
-     * @return bool
-     */
-    final public function isNumber(): bool
-    {
-        return true;
-    }
-}
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+DG\BypassFinals::enable();

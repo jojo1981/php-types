@@ -1,6 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 /*
- * This file is part of the jojo1981/type-checker package
+ * This file is part of the jojo1981/php-types package
  *
  * Copyright (c) 2020 Joost Nijhuis <jnijhuis81@gmail.com>
  *
@@ -9,6 +9,7 @@
  */
 namespace Jojo1981\PhpTypes\TestSuite\Tests;
 
+use ArrayIterator;
 use Jojo1981\PhpTypes\AbstractCompoundType;
 use Jojo1981\PhpTypes\AbstractNumberType;
 use Jojo1981\PhpTypes\AbstractPseudoType;
@@ -31,17 +32,20 @@ use Jojo1981\PhpTypes\TestSuite\Fixture\TestEntity;
 use Jojo1981\PhpTypes\Value\ClassName;
 use Jojo1981\PhpTypes\Value\Exception\ValueException;
 use Jojo1981\PhpTypes\VoidType;
+use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use SebastianBergmann\RecursionContext\InvalidArgumentException;
+use stdClass;
+use function fopen;
 
 /**
  * @package Jojo1981\PhpTypes\TestSuite\Tests
  */
-class IntegerTypeTest extends TestCase
+final class IntegerTypeTest extends TestCase
 {
     /** @var IntegerType */
-    private $type;
+    private IntegerType $type;
 
     /**
      * @return void
@@ -58,51 +62,55 @@ class IntegerTypeTest extends TestCase
      */
     public function testGetName(): void
     {
-        $this->assertSame('int', $this->type->getName());
+        self::assertSame('int', $this->type->getName());
     }
 
     /**
-     * @throws ExpectationFailedException
-     * @throws InvalidArgumentException
      * @return void
+     * @throws InvalidArgumentException
+     * @throws Exception
+     * @throws ExpectationFailedException
      */
     public function testIsScalar(): void
     {
-        $this->assertTrue($this->type->isScalar());
-        $this->assertInstanceOf(AbstractScalarType::class, $this->type);
+        self::assertTrue($this->type->isScalar());
+        self::assertInstanceOf(AbstractScalarType::class, $this->type);
     }
 
     /**
-     * @throws ExpectationFailedException
-     * @throws InvalidArgumentException
      * @return void
+     * @throws InvalidArgumentException
+     * @throws Exception
+     * @throws ExpectationFailedException
      */
     public function testIsCompound(): void
     {
-        $this->assertFalse($this->type->isCompound());
-        $this->assertNotInstanceOf(AbstractCompoundType::class, $this->type);
+        self::assertFalse($this->type->isCompound());
+        self::assertNotInstanceOf(AbstractCompoundType::class, $this->type);
     }
 
     /**
-     * @throws ExpectationFailedException
-     * @throws InvalidArgumentException
      * @return void
+     * @throws InvalidArgumentException
+     * @throws Exception
+     * @throws ExpectationFailedException
      */
     public function testIsNumber(): void
     {
-        $this->assertTrue($this->type->isNumber());
-        $this->assertInstanceOf(AbstractNumberType::class, $this->type);
+        self::assertTrue($this->type->isNumber());
+        self::assertInstanceOf(AbstractNumberType::class, $this->type);
     }
 
     /**
-     * @throws ExpectationFailedException
-     * @throws InvalidArgumentException
      * @return void
+     * @throws InvalidArgumentException
+     * @throws Exception
+     * @throws ExpectationFailedException
      */
     public function testIsPseudoType(): void
     {
-        $this->assertFalse($this->type->isPseudoType());
-        $this->assertNotInstanceOf(AbstractPseudoType::class, $this->type);
+        self::assertFalse($this->type->isPseudoType());
+        self::assertNotInstanceOf(AbstractPseudoType::class, $this->type);
     }
 
     /**
@@ -114,22 +122,22 @@ class IntegerTypeTest extends TestCase
      */
     public function testIsEqual(): void
     {
-        $this->assertTrue($this->type->isEqual($this->type));
-        $this->assertTrue($this->type->isEqual(new IntegerType()));
+        self::assertTrue($this->type->isEqual($this->type));
+        self::assertTrue($this->type->isEqual(new IntegerType()));
 
-        $this->assertFalse($this->type->isEqual(new ArrayType()));
-        $this->assertFalse($this->type->isEqual(new BooleanType()));
-        $this->assertFalse($this->type->isEqual(new CallableType()));
-        $this->assertFalse($this->type->isEqual(new ClassType(new ClassName(__CLASS__))));
-        $this->assertFalse($this->type->isEqual(new FloatType()));
-        $this->assertFalse($this->type->isEqual(new IterableType()));
-        $this->assertFalse($this->type->isEqual(new MixedType()));
-        $this->assertFalse($this->type->isEqual(new MultiType([new NullType(), new StringType()])));
-        $this->assertFalse($this->type->isEqual(new NullType()));
-        $this->assertFalse($this->type->isEqual(new ObjectType()));
-        $this->assertFalse($this->type->isEqual(new ResourceType()));
-        $this->assertFalse($this->type->isEqual(new StringType()));
-        $this->assertFalse($this->type->isEqual(new VoidType()));
+        self::assertFalse($this->type->isEqual(new ArrayType()));
+        self::assertFalse($this->type->isEqual(new BooleanType()));
+        self::assertFalse($this->type->isEqual(new CallableType()));
+        self::assertFalse($this->type->isEqual(new ClassType(new ClassName(__CLASS__))));
+        self::assertFalse($this->type->isEqual(new FloatType()));
+        self::assertFalse($this->type->isEqual(new IterableType()));
+        self::assertFalse($this->type->isEqual(new MixedType()));
+        self::assertFalse($this->type->isEqual(new MultiType([new NullType(), new StringType()])));
+        self::assertFalse($this->type->isEqual(new NullType()));
+        self::assertFalse($this->type->isEqual(new ObjectType()));
+        self::assertFalse($this->type->isEqual(new ResourceType()));
+        self::assertFalse($this->type->isEqual(new StringType()));
+        self::assertFalse($this->type->isEqual(new VoidType()));
     }
 
     /**
@@ -141,22 +149,22 @@ class IntegerTypeTest extends TestCase
      */
     public function testIsAssignableType(): void
     {
-        $this->assertTrue($this->type->isAssignableType($this->type));
-        $this->assertTrue($this->type->isAssignableType(new IntegerType()));
+        self::assertTrue($this->type->isAssignableType($this->type));
+        self::assertTrue($this->type->isAssignableType(new IntegerType()));
 
-        $this->assertFalse($this->type->isAssignableType(new ArrayType()));
-        $this->assertFalse($this->type->isAssignableType(new BooleanType()));
-        $this->assertFalse($this->type->isAssignableType(new CallableType()));
-        $this->assertFalse($this->type->isAssignableType(new ClassType(new ClassName(__CLASS__))));
-        $this->assertFalse($this->type->isAssignableType(new FloatType()));
-        $this->assertFalse($this->type->isAssignableType(new IterableType()));
-        $this->assertFalse($this->type->isAssignableType(new MixedType()));
-        $this->assertFalse($this->type->isAssignableType(new MultiType([new NullType(), new StringType()])));
-        $this->assertFalse($this->type->isAssignableType(new NullType()));
-        $this->assertFalse($this->type->isAssignableType(new ObjectType()));
-        $this->assertFalse($this->type->isAssignableType(new ResourceType()));
-        $this->assertFalse($this->type->isAssignableType(new StringType()));
-        $this->assertFalse($this->type->isAssignableType(new VoidType()));
+        self::assertFalse($this->type->isAssignableType(new ArrayType()));
+        self::assertFalse($this->type->isAssignableType(new BooleanType()));
+        self::assertFalse($this->type->isAssignableType(new CallableType()));
+        self::assertFalse($this->type->isAssignableType(new ClassType(new ClassName(__CLASS__))));
+        self::assertFalse($this->type->isAssignableType(new FloatType()));
+        self::assertFalse($this->type->isAssignableType(new IterableType()));
+        self::assertFalse($this->type->isAssignableType(new MixedType()));
+        self::assertFalse($this->type->isAssignableType(new MultiType([new NullType(), new StringType()])));
+        self::assertFalse($this->type->isAssignableType(new NullType()));
+        self::assertFalse($this->type->isAssignableType(new ObjectType()));
+        self::assertFalse($this->type->isAssignableType(new ResourceType()));
+        self::assertFalse($this->type->isAssignableType(new StringType()));
+        self::assertFalse($this->type->isAssignableType(new VoidType()));
     }
 
     /**
@@ -166,25 +174,25 @@ class IntegerTypeTest extends TestCase
      */
     public function testIsAssignableValue(): void
     {
-        $this->assertTrue($this->type->isAssignableValue(-1));
-        $this->assertTrue($this->type->isAssignableValue(0));
-        $this->assertTrue($this->type->isAssignableValue(1));
+        self::assertTrue($this->type->isAssignableValue(-1));
+        self::assertTrue($this->type->isAssignableValue(0));
+        self::assertTrue($this->type->isAssignableValue(1));
 
-        $this->assertFalse($this->type->isAssignableValue([]));
-        $this->assertFalse($this->type->isAssignableValue(['item1', 'item2', 'item3']));
-        $this->assertFalse($this->type->isAssignableValue(['key1' => 'item1', 'key2' => 'item2', 'key3' => 'item3']));
-        $this->assertFalse($this->type->isAssignableValue(true));
-        $this->assertFalse($this->type->isAssignableValue(false));
-        $this->assertFalse($this->type->isAssignableValue(static function () {}));
-        $this->assertFalse($this->type->isAssignableValue(new TestEntity()));
-        $this->assertFalse($this->type->isAssignableValue(new \stdClass()));
-        $this->assertFalse($this->type->isAssignableValue(-1.0));
-        $this->assertFalse($this->type->isAssignableValue(0.0));
-        $this->assertFalse($this->type->isAssignableValue(1.0));
-        $this->assertFalse($this->type->isAssignableValue(new \ArrayIterator()));
-        $this->assertFalse($this->type->isAssignableValue(null));
-        $this->assertFalse($this->type->isAssignableValue(\fopen(__FILE__, 'rb')));
-        $this->assertFalse($this->type->isAssignableValue(''));
-        $this->assertFalse($this->type->isAssignableValue('text'));
+        self::assertFalse($this->type->isAssignableValue([]));
+        self::assertFalse($this->type->isAssignableValue(['item1', 'item2', 'item3']));
+        self::assertFalse($this->type->isAssignableValue(['key1' => 'item1', 'key2' => 'item2', 'key3' => 'item3']));
+        self::assertFalse($this->type->isAssignableValue(true));
+        self::assertFalse($this->type->isAssignableValue(false));
+        self::assertFalse($this->type->isAssignableValue(static function () {}));
+        self::assertFalse($this->type->isAssignableValue(new TestEntity()));
+        self::assertFalse($this->type->isAssignableValue(new stdClass()));
+        self::assertFalse($this->type->isAssignableValue(-1.0));
+        self::assertFalse($this->type->isAssignableValue(0.0));
+        self::assertFalse($this->type->isAssignableValue(1.0));
+        self::assertFalse($this->type->isAssignableValue(new ArrayIterator()));
+        self::assertFalse($this->type->isAssignableValue(null));
+        self::assertFalse($this->type->isAssignableValue(fopen(__FILE__, 'rb')));
+        self::assertFalse($this->type->isAssignableValue(''));
+        self::assertFalse($this->type->isAssignableValue('text'));
     }
 }

@@ -1,6 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 /*
- * This file is part of the jojo1981/type-checker package
+ * This file is part of the jojo1981/php-types package
  *
  * Copyright (c) 2020 Joost Nijhuis <jnijhuis81@gmail.com>
  *
@@ -9,6 +9,7 @@
  */
 namespace Jojo1981\PhpTypes\TestSuite\Tests;
 
+use ArrayIterator;
 use Jojo1981\PhpTypes\AbstractType;
 use Jojo1981\PhpTypes\ArrayType;
 use Jojo1981\PhpTypes\BooleanType;
@@ -34,16 +35,21 @@ use Jojo1981\PhpTypes\Value\Exception\ValueException;
 use Jojo1981\PhpTypes\VoidType;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use SebastianBergmann\RecursionContext\InvalidArgumentException;
+use stdClass;
+use function fopen;
 
 /**
  * @package Jojo1981\PhpTypes\TestSuite\Tests
  */
-class AbstractTypeTest extends TestCase
+final class AbstractTypeTest extends TestCase
 {
     /**
-     * @throws TypeException
      * @return void
+     * @throws ValueException
+     * @throws RuntimeException
+     * @throws TypeException
      */
     public function testCreateFromNameWithInvalidName(): void
     {
@@ -59,14 +65,16 @@ class AbstractTypeTest extends TestCase
      *
      * @param string $typeName
      * @param TypeInterface $expectedType
-     * @throws InvalidArgumentException
-     * @throws TypeException
-     * @throws ExpectationFailedException
      * @return void
+     * @throws InvalidArgumentException
+     * @throws RuntimeException
+     * @throws TypeException
+     * @throws ValueException
+     * @throws ExpectationFailedException
      */
     public function testCreateFromName(string $typeName, TypeInterface $expectedType): void
     {
-        $this->assertEquals($expectedType, AbstractType::createFromTypeName($typeName));
+        self::assertEquals($expectedType, AbstractType::createFromTypeName($typeName));
     }
 
     /**
@@ -74,14 +82,16 @@ class AbstractTypeTest extends TestCase
      *
      * @param mixed $value
      * @param TypeInterface $expectedType
-     * @throws InvalidArgumentException
-     * @throws TypeException
-     * @throws ExpectationFailedException
      * @return void
+     * @throws InvalidArgumentException
+     * @throws RuntimeException
+     * @throws TypeException
+     * @throws ValueException
+     * @throws ExpectationFailedException
      */
     public function testCreateFromValue($value, TypeInterface $expectedType): void
     {
-        $this->assertEquals($expectedType, AbstractType::createFromValue($value));
+        self::assertEquals($expectedType, AbstractType::createFromValue($value));
     }
 
     /**
@@ -147,16 +157,16 @@ class AbstractTypeTest extends TestCase
     public function testCreateFromTypes(): void
     {
         $multiType1 = AbstractType::createFromTypes([new ObjectType(), new StringType()]);
-        $this->assertEquals([new ObjectType(), new StringType()], $multiType1->getTypes());
+        self::assertEquals([new ObjectType(), new StringType()], $multiType1->getTypes());
 
         $multiType2 = AbstractType::createFromTypes([$multiType1]);
-        $this->assertEquals([new ObjectType(), new StringType()], $multiType2->getTypes());
+        self::assertEquals([new ObjectType(), new StringType()], $multiType2->getTypes());
 
         $multiType3 = AbstractType::createFromTypes([$multiType1, new StringType()]);
-        $this->assertEquals([new ObjectType(), new StringType()], $multiType3->getTypes());
+        self::assertEquals([new ObjectType(), new StringType()], $multiType3->getTypes());
 
         $multiType4 = AbstractType::createFromTypes([$multiType1, new IntegerType()]);
-        $this->assertEquals([new ObjectType(), new StringType(), new IntegerType()], $multiType4->getTypes());
+        self::assertEquals([new ObjectType(), new StringType(), new IntegerType()], $multiType4->getTypes());
     }
 
     /**
@@ -208,7 +218,9 @@ class AbstractTypeTest extends TestCase
             ['\\' . InterfaceTestEntity::class, new ClassType(new ClassName(InterfaceTestEntity::class))],
             ['\\' . AbstractTestEntity::class, new ClassType(new ClassName(AbstractTestEntity::class))],
             ['\\' . TestEntityBase::class, new ClassType(new ClassName(TestEntityBase::class))],
-            ['\\' . TestEntity::class, new ClassType(new ClassName(TestEntity::class))]
+            ['\\' . TestEntity::class, new ClassType(new ClassName(TestEntity::class))],
+            [TestEntity::class . '[]', new ArrayType(new ClassType(new ClassName(TestEntity::class)))],
+            ['array<string, ' . TestEntity::class . '>', new ArrayType(new ClassType(new ClassName(TestEntity::class)), new StringType())]
         ];
     }
 
@@ -233,11 +245,11 @@ class AbstractTypeTest extends TestCase
             [[], new ArrayType()],
             [['item1', 'item3', 'item3'], new ArrayType()],
             [['key1' => 'item1', 'key2' => 'item3', 'key3' => 'item3'], new ArrayType()],
-            [new \stdClass(), new ClassType(new ClassName(\stdClass::class))],
+            [new stdClass(), new ClassType(new ClassName(stdClass::class))],
             [new TestEntity(), new ClassType(new ClassName(TestEntity::class))],
             [static function () {}, new CallableType()],
-            [new \ArrayIterator(), new IterableType()],
-            [\fopen(__FILE__, 'rb'), new ResourceType()],
+            [new ArrayIterator(), new IterableType()],
+            [fopen(__FILE__, 'rb'), new ResourceType()],
             [null, new NullType()],
             [new CallableTestClass(), new CallableType()]
         ];

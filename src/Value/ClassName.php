@@ -10,6 +10,16 @@
 namespace Jojo1981\PhpTypes\Value;
 
 use Jojo1981\PhpTypes\Value\Exception\ValueException;
+use function array_pop;
+use function class_exists;
+use function count;
+use function end;
+use function explode;
+use function implode;
+use function interface_exists;
+use function ltrim;
+use function preg_match;
+use function sprintf;
 
 /**
  * @package Jojo1981\PhpTypes\Value
@@ -32,8 +42,8 @@ final class ClassName
     public function __construct(string $value)
     {
         $this->assertValue($value);
-        $value = \ltrim($value, self::NAMESPACE__SEPARATOR);
-        $this->parts = \explode(self::NAMESPACE__SEPARATOR, $value);
+        $value = ltrim($value, self::NAMESPACE__SEPARATOR);
+        $this->parts = explode(self::NAMESPACE__SEPARATOR, $value);
     }
 
     /**
@@ -41,7 +51,7 @@ final class ClassName
      */
     public function getShortName(): string
     {
-        return \end($this->parts);
+        return end($this->parts);
     }
 
     /**
@@ -49,7 +59,7 @@ final class ClassName
      */
     public function getFqcn(): string
     {
-        return self::NAMESPACE__SEPARATOR . \implode(self::NAMESPACE__SEPARATOR, $this->parts);
+        return self::NAMESPACE__SEPARATOR . implode(self::NAMESPACE__SEPARATOR, $this->parts);
     }
 
     /**
@@ -58,9 +68,9 @@ final class ClassName
     public function getNamespace(): string
     {
         $parts = $this->parts;
-        \array_pop($parts);
+        array_pop($parts);
 
-        return self::NAMESPACE__SEPARATOR . \implode(self::NAMESPACE__SEPARATOR, $parts);
+        return self::NAMESPACE__SEPARATOR . implode(self::NAMESPACE__SEPARATOR, $parts);
     }
 
     /**
@@ -68,7 +78,7 @@ final class ClassName
      */
     public function isInGlobalNameSpace(): bool
     {
-        return 1 === \count($this->parts);
+        return 1 === count($this->parts);
     }
 
     /**
@@ -76,7 +86,7 @@ final class ClassName
      */
     public function exists(): bool
     {
-        return \class_exists($this->getFqcn()) || \interface_exists($this->getFqcn());
+        return class_exists($this->getFqcn()) || interface_exists($this->getFqcn());
     }
 
     /**
@@ -99,9 +109,9 @@ final class ClassName
             throw new ValueException('Class name can not be an empty string');
         }
 
-        foreach (\explode(self::NAMESPACE__SEPARATOR, ltrim($value, self::NAMESPACE__SEPARATOR)) as $part) {
-            if (1 !== \preg_match(self::PATTERN, $part)) {
-                throw new ValueException(\sprintf('Class name: `%s` is not valid.', $value));
+        foreach (explode(self::NAMESPACE__SEPARATOR, ltrim($value, self::NAMESPACE__SEPARATOR)) as $part) {
+            if (1 !== preg_match(self::PATTERN, $part)) {
+                throw new ValueException(sprintf('Class name: `%s` is not valid.', $value));
             }
         }
     }

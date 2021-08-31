@@ -1,6 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 /*
- * This file is part of the jojo1981/type-checker package
+ * This file is part of the jojo1981/php-types package
  *
  * Copyright (c) 2020 Joost Nijhuis <jnijhuis81@gmail.com>
  *
@@ -22,11 +22,11 @@ use SebastianBergmann\RecursionContext\InvalidArgumentException;
 /**
  * @package Jojo1981\PhpTypes\TestSuite\Tests\Value
  */
-class ClassNameTest extends TestCase
+final class ClassNameTest extends TestCase
 {
     /**
-     * @throws ValueException
      * @return void
+     * @throws ValueException
      */
     public function testEmptyValue(): void
     {
@@ -63,14 +63,14 @@ class ClassNameTest extends TestCase
     public function testClassInGlobalNamespace(): void
     {
         $className = new ClassName('Test');
-        $this->assertSame('Test', $className->getShortName());
-        $this->assertSame('\Test', $className->getFqcn());
-        $this->assertSame('\\', $className->getNamespace());
-        $this->assertTrue($className->isInGlobalNameSpace());
-        $this->assertTrue($className->isEqual($className));
-        $this->assertTrue($className->isEqual(new ClassName('Test')));
-        $this->assertFalse($className->isEqual(new ClassName('OtherTest')));
-        $this->assertFalse($className->exists());
+        self::assertSame('Test', $className->getShortName());
+        self::assertSame('\Test', $className->getFqcn());
+        self::assertSame('\\', $className->getNamespace());
+        self::assertTrue($className->isInGlobalNameSpace());
+        self::assertTrue($className->isEqual($className));
+        self::assertTrue($className->isEqual(new ClassName('Test')));
+        self::assertFalse($className->isEqual(new ClassName('OtherTest')));
+        self::assertFalse($className->exists());
     }
 
     /**
@@ -82,14 +82,14 @@ class ClassNameTest extends TestCase
     public function testClassInSubNamespace(): void
     {
         $className = new ClassName('\Test\TestClass');
-        $this->assertSame('TestClass', $className->getShortName());
-        $this->assertSame('\Test\TestClass', $className->getFqcn());
-        $this->assertSame('\Test', $className->getNamespace());
-        $this->assertFalse($className->isInGlobalNameSpace());
-        $this->assertTrue($className->isEqual($className));
-        $this->assertTrue($className->isEqual(new ClassName('Test\TestClass')));
-        $this->assertFalse($className->isEqual(new ClassName('OtherTest')));
-        $this->assertFalse($className->exists());
+        self::assertSame('TestClass', $className->getShortName());
+        self::assertSame('\Test\TestClass', $className->getFqcn());
+        self::assertSame('\Test', $className->getNamespace());
+        self::assertFalse($className->isInGlobalNameSpace());
+        self::assertTrue($className->isEqual($className));
+        self::assertTrue($className->isEqual(new ClassName('Test\TestClass')));
+        self::assertFalse($className->isEqual(new ClassName('OtherTest')));
+        self::assertFalse($className->exists());
     }
 
     /**
@@ -101,18 +101,18 @@ class ClassNameTest extends TestCase
     public function testExists(): void
     {
         $className = new ClassName(__CLASS__);
-        $this->assertTrue($className->exists());
+        self::assertTrue($className->exists());
 
         $className = new ClassName(InterfaceTestEntity::class);
-        $this->assertTrue($className->exists());
+        self::assertTrue($className->exists());
 
         $className = new ClassName(AbstractTestEntity::class);
-        $this->assertTrue($className->exists());
+        self::assertTrue($className->exists());
 
         $className = new ClassName(TestEntity::class);
-        $this->assertTrue($className->exists());
+        self::assertTrue($className->exists());
 
         $className = new ClassName(TestEntityBase::class);
-        $this->assertTrue($className->exists());
+        self::assertTrue($className->exists());
     }
 }

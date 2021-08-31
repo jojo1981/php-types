@@ -1,6 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 /*
- * This file is part of the jojo1981/type-checker package
+ * This file is part of the jojo1981/php-types package
  *
  * Copyright (c) 2020 Joost Nijhuis <jnijhuis81@gmail.com>
  *
@@ -14,5 +14,10 @@ namespace Jojo1981\PhpTypes\TestSuite\Fixture;
  */
 class CallableTestClass
 {
-    public function __invoke() {}
+    /**
+     * @return void
+     */
+    public function __invoke()
+    {
+    }
 }

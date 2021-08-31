@@ -9,6 +9,8 @@
  */
 namespace Jojo1981\PhpTypes;
 
+use function is_string;
+
 /**
  * @package Jojo1981\PhpTypes
  */
@@ -28,6 +30,6 @@ final class StringType extends AbstractScalarType
      */
     public function isAssignableValue($value): bool
     {
-        return \is_string($value);
+        return is_string($value);
     }
 }

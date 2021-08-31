@@ -10,7 +10,27 @@
 namespace Jojo1981\PhpTypes;
 
 use Jojo1981\PhpTypes\Exception\TypeException;
+use Jojo1981\PhpTypes\Parser\ArrayTypeParser;
+use Jojo1981\PhpTypes\Parser\MultiTypeParser;
 use Jojo1981\PhpTypes\Value\ClassName;
+use Jojo1981\PhpTypes\Value\Exception\ValueException;
+use RuntimeException;
+use function class_exists;
+use function get_class;
+use function gettype;
+use function implode;
+use function interface_exists;
+use function is_a;
+use function is_callable;
+use function is_iterable;
+use function is_object;
+use function preg_replace;
+use function sprintf;
+use function stripos;
+use function strpos;
+use function strtolower;
+use function substr;
+use function trim;
 
 /**
  * Abstract factory pattern implemented here.
@@ -80,7 +100,7 @@ abstract class AbstractType implements TypeInterface
      */
     public function isEqual(TypeInterface $type): bool
     {
-        return \get_class($this) === \get_class($type);
+        return get_class($this) === get_class($type);
     }
 
     /**
@@ -89,17 +109,20 @@ abstract class AbstractType implements TypeInterface
      */
     public function isAssignableType(TypeInterface $type): bool
     {
-        return \is_a($type, \get_class($this));
+        return is_a($type, get_class($this));
     }
 
     /**
      * @param string $typeName
-     * @throws TypeException
      * @return TypeInterface
+     * @throws ValueException
+     * @throws RuntimeException
+     * @throws TypeException
      */
     final public static function createFromTypeName(string $typeName): TypeInterface
     {
-        switch (\strtolower($typeName)) {
+        $typeName = preg_replace('/\s+/', '', trim($typeName));
+        switch (strtolower($typeName)) {
             case 'bool':
             case 'boolean':
                 return new BooleanType();
@@ -133,36 +156,50 @@ abstract class AbstractType implements TypeInterface
                 return new MixedType();
         }
 
-        if (\class_exists($typeName) || \interface_exists($typeName)) {
+        if (0 === stripos($typeName, 'array')) {
+            return ArrayTypeParser::parse($typeName);
+        }
+
+        if (!empty($typeName) && false !== strpos('|', $typeName)) {
+            return MultiTypeParser::parse($typeName);
+        }
+
+        if ('[]' === substr($typeName, -2)) {
+            return new ArrayType(self::createFromTypeName(substr($typeName, 0, -2)));
+        }
+
+        if (class_exists($typeName) || interface_exists($typeName)) {
             return new ClassType(new ClassName($typeName));
         }
 
-        throw new TypeException(\sprintf(
+        throw new TypeException(sprintf(
             'Invalid type: `%s` given. Valid types are [%s]',
             $typeName,
-            \implode(', ', self::VALID_TYPE_NAMES)
+            implode(', ', self::VALID_TYPE_NAMES)
         ));
     }
 
     /**
      * @param mixed $value
-     * @throws TypeException
      * @return TypeInterface
+     * @throws TypeException
+     * @throws ValueException
+     * @throws RuntimeException
      */
     final public static function createFromValue($value): TypeInterface
     {
-        if (\is_object($value)) {
-            if (\is_iterable($value)) {
+        if (is_object($value)) {
+            if (is_iterable($value)) {
                 return self::createFromTypeName('iterable');
             }
-            if (\is_callable($value)) {
+            if (is_callable($value)) {
                 return self::createFromTypeName('callable');
             }
 
-            return new ClassType(new ClassName(\get_class($value)));
+            return new ClassType(new ClassName(get_class($value)));
         }
 
-        return self::createFromTypeName(\gettype($value));
+        return self::createFromTypeName(gettype($value));
     }
 
     /**
@@ -173,5 +210,13 @@ abstract class AbstractType implements TypeInterface
     final public static function createFromTypes(array $types): MultiType
     {
         return new MultiType($types);
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->getName();
     }
 }

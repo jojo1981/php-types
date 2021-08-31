@@ -9,6 +9,8 @@
  */
 namespace Jojo1981\PhpTypes;
 
+use function is_resource;
+
 /**
  * @package Jojo1981\PhpTypes
  */
@@ -28,6 +30,6 @@ final class ResourceType extends AbstractType
      */
     public function isAssignableValue($value): bool
     {
-        return \is_resource($value);
+        return is_resource($value);
     }
 }
