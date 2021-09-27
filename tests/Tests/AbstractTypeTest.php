@@ -20,6 +20,7 @@ use Jojo1981\PhpTypes\FloatType;
 use Jojo1981\PhpTypes\IntegerType;
 use Jojo1981\PhpTypes\IterableType;
 use Jojo1981\PhpTypes\MixedType;
+use Jojo1981\PhpTypes\MultiType;
 use Jojo1981\PhpTypes\NullType;
 use Jojo1981\PhpTypes\ObjectType;
 use Jojo1981\PhpTypes\ResourceType;
@@ -220,7 +221,8 @@ final class AbstractTypeTest extends TestCase
             ['\\' . TestEntityBase::class, new ClassType(new ClassName(TestEntityBase::class))],
             ['\\' . TestEntity::class, new ClassType(new ClassName(TestEntity::class))],
             [TestEntity::class . '[]', new ArrayType(new ClassType(new ClassName(TestEntity::class)))],
-            ['array<string, ' . TestEntity::class . '>', new ArrayType(new ClassType(new ClassName(TestEntity::class)), new StringType())]
+            ['array<string, ' . TestEntity::class . '>', new ArrayType(new ClassType(new ClassName(TestEntity::class)), new StringType())],
+            ['int|string', new MultiType([new IntegerType(), new StringType()])]
         ];
     }
 

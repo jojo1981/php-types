@@ -252,12 +252,12 @@ abstract class AbstractType implements TypeInterface
                 return new MixedType();
         }
 
-        if (0 === stripos($typeName, 'array')) {
-            return ArrayTypeParser::parse($typeName);
+        if (!empty($typeName) && false !== strpos($typeName, '|')) {
+            return MultiTypeParser::parse($typeName);
         }
 
-        if (!empty($typeName) && false !== strpos('|', $typeName)) {
-            return MultiTypeParser::parse($typeName);
+        if (0 === stripos($typeName, 'array')) {
+            return ArrayTypeParser::parse($typeName);
         }
 
         if ('[]' === substr($typeName, -2)) {
