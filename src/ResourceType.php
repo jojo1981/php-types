@@ -25,6 +25,14 @@ final class ResourceType extends AbstractType
     }
 
     /**
+     * @return bool
+     */
+    public function isResource(): bool
+    {
+        return true;
+    }
+
+    /**
      * @param mixed $value
      * @return bool
      */

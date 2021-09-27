@@ -61,6 +61,14 @@ final class ClassType extends ObjectType
     }
 
     /**
+     * @return bool
+     */
+    public function isClass(): bool
+    {
+        return true;
+    }
+
+    /**
      * @param TypeInterface $type
      * @return bool
      */

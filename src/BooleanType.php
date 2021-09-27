@@ -25,6 +25,14 @@ final class BooleanType extends AbstractScalarType
     }
 
     /**
+     * @return bool
+     */
+    public function isBoolean(): bool
+    {
+        return true;
+    }
+
+    /**
      * @param mixed $value
      * @return bool
      */

@@ -23,6 +23,14 @@ final class VoidType extends AbstractType
     }
 
     /**
+     * @return bool
+     */
+    public function isVoid(): bool
+    {
+        return true;
+    }
+
+    /**
      * @param mixed $value
      * @return bool
      */

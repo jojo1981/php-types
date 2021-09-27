@@ -25,6 +25,14 @@ final class IterableType extends AbstractCompoundType
     }
 
     /**
+     * @return bool
+     */
+    public function isIterable(): bool
+    {
+        return true;
+    }
+
+    /**
      * @param mixed $value
      * @return bool
      */

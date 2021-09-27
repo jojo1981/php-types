@@ -25,6 +25,14 @@ final class FloatType extends AbstractNumberType
     }
 
     /**
+     * @return bool
+     */
+    public function isFloat(): bool
+    {
+        return true;
+    }
+
+    /**
      * @param mixed $value
      * @return bool
      */

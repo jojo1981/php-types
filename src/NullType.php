@@ -23,6 +23,14 @@ class NullType extends AbstractType
     }
 
     /**
+     * @return bool
+     */
+    public function isNull(): bool
+    {
+        return true;
+    }
+
+    /**
      * @param mixed $value
      * @return bool
      */

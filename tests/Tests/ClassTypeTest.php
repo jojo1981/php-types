@@ -132,6 +132,27 @@ final class ClassTypeTest extends TestCase
     }
 
     /**
+     * @return void
+     * @throws InvalidArgumentException
+     * @throws ExpectationFailedException
+     */
+    public function testIsOfCertainType(): void
+    {
+        self::assertFalse($this->type->isBoolean());
+        self::assertFalse($this->type->isString());
+        self::assertTrue($this->type->isObject());
+        self::assertTrue($this->type->isClass());
+        self::assertFalse($this->type->isInteger());
+        self::assertFalse($this->type->isFloat());
+        self::assertFalse($this->type->isArray());
+        self::assertFalse($this->type->isIterable());
+        self::assertFalse($this->type->isCallable());
+        self::assertFalse($this->type->isResource());
+        self::assertFalse($this->type->isNull());
+        self::assertFalse($this->type->isVoid());
+    }
+
+    /**
      * @throws InvalidArgumentException
      * @throws TypeException
      * @throws ValueException

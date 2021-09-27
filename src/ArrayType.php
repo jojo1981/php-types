@@ -59,6 +59,22 @@ final class ArrayType extends AbstractCompoundType
     /**
      * @return bool
      */
+    public function isArray(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIterable(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
     public function isPseudoType(): bool
     {
         return null !== $this->valueType || null !== $this->keyType;

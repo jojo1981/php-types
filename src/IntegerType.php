@@ -25,6 +25,14 @@ final class IntegerType extends AbstractNumberType
     }
 
     /**
+     * @return bool
+     */
+    public function isInteger(): bool
+    {
+        return true;
+    }
+
+    /**
      * @param mixed $value
      * @return bool
      */

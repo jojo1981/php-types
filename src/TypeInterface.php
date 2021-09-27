@@ -35,6 +35,66 @@ interface TypeInterface
     public function isNumber(): bool;
 
     /**
+     * @return bool
+     */
+    public function isBoolean(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isString(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isObject(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isClass(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isInteger(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isFloat(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isArray(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isIterable(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isCallable(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isResource(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isNull(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isVoid(): bool;
+
+    /**
      * @param TypeInterface $type
      * @return bool
      */

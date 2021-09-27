@@ -9,6 +9,8 @@
  */
 namespace Jojo1981\PhpTypes;
 
+use function is_callable;
+
 /**
  * @package Jojo1981\PhpTypes
  */
@@ -23,11 +25,19 @@ final class CallableType extends AbstractCompoundType
     }
 
     /**
+     * @return bool
+     */
+    public function isCallable(): bool
+    {
+        return true;
+    }
+
+    /**
      * @param mixed $value
      * @return bool
      */
     public function isAssignableValue($value): bool
     {
-        return \is_callable($value);
+        return is_callable($value);
     }
 }

@@ -115,6 +115,27 @@ final class ArrayTypeTest extends TestCase
     }
 
     /**
+     * @return void
+     * @throws InvalidArgumentException
+     * @throws ExpectationFailedException
+     */
+    public function testIsOfCertainType(): void
+    {
+        self::assertFalse($this->type->isBoolean());
+        self::assertFalse($this->type->isString());
+        self::assertFalse($this->type->isObject());
+        self::assertFalse($this->type->isClass());
+        self::assertFalse($this->type->isInteger());
+        self::assertFalse($this->type->isFloat());
+        self::assertTrue($this->type->isArray());
+        self::assertTrue($this->type->isIterable());
+        self::assertFalse($this->type->isCallable());
+        self::assertFalse($this->type->isResource());
+        self::assertFalse($this->type->isNull());
+        self::assertFalse($this->type->isVoid());
+    }
+
+    /**
      * @throws InvalidArgumentException
      * @throws TypeException
      * @throws ValueException

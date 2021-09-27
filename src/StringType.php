@@ -25,6 +25,14 @@ final class StringType extends AbstractScalarType
     }
 
     /**
+     * @return bool
+     */
+    public function isString(): bool
+    {
+        return true;
+    }
+
+    /**
      * @param mixed $value
      * @return bool
      */

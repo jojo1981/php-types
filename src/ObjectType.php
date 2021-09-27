@@ -26,6 +26,14 @@ class ObjectType extends AbstractCompoundType
     }
 
     /**
+     * @return bool
+     */
+    public function isObject(): bool
+    {
+        return true;
+    }
+
+    /**
      * @param mixed $value
      * @return bool
      */

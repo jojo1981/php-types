@@ -95,6 +95,102 @@ abstract class AbstractType implements TypeInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isBoolean(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isString(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isObject(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isClass(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInteger(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFloat(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isArray(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIterable(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCallable(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isResource(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNull(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVoid(): bool
+    {
+        return false;
+    }
+
+    /**
      * @param TypeInterface $type
      * @return bool
      */
