@@ -94,8 +94,8 @@ final class ArrayType extends AbstractCompoundType
      */
     public function __toString(): string
     {
-        if (null !== $this->valueType && null !== $this->keyType) {
-            return $this->getName() . '<' . $this->keyType . ', ' . $this->valueType;
+        if (null !== $this->valueType && null !== $this->keyType && !$this->keyType->isInteger()) {
+            return $this->getName() . '<' . $this->keyType . ',' . $this->valueType . '>';
         }
         if (null !== $this->valueType) {
             return $this->valueType->getName() . '[]';

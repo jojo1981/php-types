@@ -241,4 +241,23 @@ final class ArrayTypeTest extends TestCase
         self::assertFalse($this->type->isAssignableValue(''));
         self::assertFalse($this->type->isAssignableValue('text'));
     }
+
+    /**
+     * @return void
+     * @throws InvalidArgumentException
+     * @throws TypeException
+     * @throws ValueException
+     * @throws ExpectationFailedException
+     */
+    public function testStringRepresentation(): void
+    {
+        self::assertEquals('array', (string) new ArrayType());
+        self::assertEquals('int[]', (string) new ArrayType(new IntegerType()));
+        self::assertEquals('string[]', (string) new ArrayType(new StringType()));
+        self::assertEquals('array', (string) new ArrayType(null, new IntegerType()));
+        self::assertEquals('object[]', (string) new ArrayType(new ObjectType(), new IntegerType()));
+        self::assertEquals('array<string,\Jojo1981\PhpTypes\TestSuite\Fixture\TestEntity>', (string) new ArrayType(new ClassType(new ClassName(TestEntity::class)), new StringType()));
+        self::assertEquals('\Jojo1981\PhpTypes\TestSuite\Fixture\TestEntity[]', (string) new ArrayType(new ClassType(new ClassName(TestEntity::class))));
+        self::assertEquals('\Jojo1981\PhpTypes\TestSuite\Fixture\TestEntity[]', (string) new ArrayType(new ClassType(new ClassName(TestEntity::class)), new IntegerType()));
+    }
 }
