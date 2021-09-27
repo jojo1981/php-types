@@ -68,6 +68,30 @@ final class ArrayTypeTest extends TestCase
     /**
      * @return void
      * @throws InvalidArgumentException
+     * @throws ExpectationFailedException
+     */
+    public function testGetKeyType(): void
+    {
+        self::assertNull($this->type->getKeyType());
+        $stringType = new StringType();
+        self::assertSame($stringType, (new ArrayType(null, $stringType))->getKeyType());
+    }
+
+    /**
+     * @return void
+     * @throws InvalidArgumentException
+     * @throws ExpectationFailedException
+     */
+    public function testGetValueType(): void
+    {
+        self::assertNull($this->type->getValueType());
+        $integerType = new IntegerType();
+        self::assertSame($integerType, (new ArrayType($integerType))->getValueType());
+    }
+
+    /**
+     * @return void
+     * @throws InvalidArgumentException
      * @throws PHPUnitFrameworkException
      * @throws ExpectationFailedException
      */
