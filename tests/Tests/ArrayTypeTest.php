@@ -49,10 +49,31 @@ final class ArrayTypeTest extends TestCase
 
     /**
      * @return void
+     * @throws TypeException
      */
     protected function setUp(): void
     {
         $this->type = new ArrayType();
+    }
+
+    /***
+     * @return void
+     * @throws TypeException
+     */
+    public function testUsingVoidTypeAsValueTypeShouldThrowAnException(): void
+    {
+        $this->expectExceptionObject(new TypeException('Array value type can not be of type void'));
+        new ArrayType(new VoidType());
+    }
+
+    /**
+     * @return void
+     * @throws TypeException
+     */
+    public function testUsingVoidTypeAsKeyTypeShouldThrowAnException(): void
+    {
+        $this->expectExceptionObject(new TypeException('Array key type can not be of type void'));
+        new ArrayType(null, new VoidType());
     }
 
     /**
@@ -68,6 +89,7 @@ final class ArrayTypeTest extends TestCase
     /**
      * @return void
      * @throws InvalidArgumentException
+     * @throws TypeException
      * @throws ExpectationFailedException
      */
     public function testGetKeyType(): void
@@ -80,6 +102,7 @@ final class ArrayTypeTest extends TestCase
     /**
      * @return void
      * @throws InvalidArgumentException
+     * @throws TypeException
      * @throws ExpectationFailedException
      */
     public function testGetValueType(): void
@@ -129,6 +152,7 @@ final class ArrayTypeTest extends TestCase
      * @return void
      * @throws InvalidArgumentException
      * @throws PHPUnitFrameworkException
+     * @throws TypeException
      * @throws ExpectationFailedException
      */
     public function testIsPseudoType(): void

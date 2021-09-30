@@ -9,12 +9,13 @@
  */
 namespace Jojo1981\PhpTypes;
 
+use Jojo1981\PhpTypes\Exception\TypeException;
 use function is_array;
 
 /**
  * @package Jojo1981\PhpTypes
  */
-final class ArrayType extends AbstractCompoundType
+class ArrayType extends AbstractCompoundType
 {
     /** @var TypeInterface|null */
     private ?TypeInterface $valueType;
@@ -25,11 +26,12 @@ final class ArrayType extends AbstractCompoundType
     /**
      * @param TypeInterface|null $valueType
      * @param TypeInterface|null $keyType
+     * @throws TypeException
      */
     public function __construct(?TypeInterface $valueType = null, ?TypeInterface $keyType = null)
     {
-        $this->valueType = $valueType;
-        $this->keyType = $keyType;
+        $this->valueType = $this->assertValueType($valueType);
+        $this->keyType = $this->assertKeyType($keyType);
     }
 
     /**
@@ -102,5 +104,33 @@ final class ArrayType extends AbstractCompoundType
         }
 
         return $this->getName();
+    }
+
+    /**
+     * @param TypeInterface|null $keyType
+     * @return TypeInterface|null
+     * @throws TypeException
+     */
+    private function assertKeyType(?TypeInterface $keyType): ?TypeInterface
+    {
+        if (null !== $keyType && $keyType->isVoid()) {
+            throw new TypeException('Array key type can not be of type void');
+        }
+
+        return $keyType;
+    }
+
+    /**
+     * @param TypeInterface|null $valueType
+     * @return TypeInterface|null
+     * @throws TypeException
+     */
+    private function assertValueType(?TypeInterface $valueType): ?TypeInterface
+    {
+        if (null !== $valueType && $valueType->isVoid()) {
+            throw new TypeException('Array value type can not be of type void');
+        }
+
+        return $valueType;
     }
 }
