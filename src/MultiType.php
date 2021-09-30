@@ -10,12 +10,16 @@
 namespace Jojo1981\PhpTypes;
 
 use Jojo1981\PhpTypes\Exception\TypeException;
-use function array_reduce;
 use function array_values;
 use function count;
+use function implode;
+use function in_array;
 use function sprintf;
 
 /**
+ * A multi type (union type) can hold any type except a multi type.
+ *  It must have at least 2 types and can not have duplicated types.
+ *
  * @package Jojo1981\PhpTypes
  */
 final class MultiType extends AbstractPseudoType
@@ -29,30 +33,7 @@ final class MultiType extends AbstractPseudoType
      */
     public function __construct(array $types)
     {
-        $processTypes = static function (array $types) use (&$processTypes): array {
-            return array_values(
-                array_reduce(
-                    $types,
-                    static function (array $resultTypes, $type) use (&$processTypes): array {
-                        $currentTypes = $type instanceof MultiType ? $processTypes($type->getTypes()) : [$type];
-                        foreach ($currentTypes as $currentType) {
-                            if ($currentType instanceof TypeInterface) {
-                                $resultTypes[$currentType->getName()] = $currentType;
-                            } else {
-                                $resultTypes[] = $currentType;
-                            }
-                        }
-
-                        return $resultTypes;
-                    },
-                    []
-                )
-            );
-        };
-
-        $types = $processTypes($types);
-        $this->assertTypes($types);
-        $this->types = $types;
+        $this->types = $this->assertTypes($types);
     }
 
     /**
@@ -69,6 +50,14 @@ final class MultiType extends AbstractPseudoType
     public function getName(): string
     {
         return 'multi';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCompound(): bool
+    {
+        return true;
     }
 
     /**
@@ -137,18 +126,28 @@ final class MultiType extends AbstractPseudoType
     }
 
     /**
-     * @param TypeInterface[] $types
-     * @throws TypeException
-     * @return void
+     * @return string
      */
-    private function assertTypes(array $types): void
+    public function __toString(): string
+    {
+        return implode('|', $this->types);
+    }
+
+    /**
+     * @param TypeInterface[] $types
+     * @return TypeInterface[]
+     * @throws TypeException
+     */
+    private function assertTypes(array $types): array
     {
         if (empty($types)) {
-            throw new TypeException('Invalid type values given, types can not be empty');
+            throw new TypeException('Invalid type values given, types can not be empty.');
         }
         if (count($types) < 2) {
-            throw new TypeException('Invalid type values given, types must contain at least 2 types');
+            throw new TypeException('Invalid type values given, types must contain at least 2 types.');
         }
+
+        $seenTypes = [];
         foreach ($types as $type) {
             if (!($type instanceof TypeInterface)) {
                 throw new TypeException(sprintf(
@@ -156,12 +155,21 @@ final class MultiType extends AbstractPseudoType
                     TypeInterface::class
                 ));
             }
-            if ($type instanceof VoidType) {
+            if ($type instanceof self) {
                 throw new TypeException(sprintf(
-                    'Invalid types value given. Element of void type found, a multi type can not contain a %s.',
-                    VoidType::class
+                    'Invalid types value given. Element of  multi type found, a multi type can not contain an instance of %s.',
+                    self::class
                 ));
             }
+            if (in_array($type->getName(), $seenTypes, true)) {
+                throw new TypeException(sprintf(
+                    'Invalid type values given, value: %s is already included. Types must be unique no duplicates are allowed.',
+                    $type->getName()
+                ));
+            }
+            $seenTypes[] = $type->getName();
         }
+
+        return array_values($types);
     }
 }

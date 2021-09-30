@@ -101,7 +101,7 @@ final class AbstractTypeTest extends TestCase
      */
     public function testCreateFromTypesWithEmptyTypes(): void
     {
-        $this->expectExceptionObject(new TypeException('Invalid type values given, types can not be empty'));
+        $this->expectExceptionObject(new TypeException('Invalid type values given, types can not be empty.'));
         AbstractType::createFromTypes([]);
     }
 
@@ -119,34 +119,12 @@ final class AbstractTypeTest extends TestCase
      * @throws TypeException
      * @return void
      */
-    public function testCreateFromTypesWithDuplicates(): void
-    {
-        $this->expectExceptionObject(new TypeException('Invalid type values given, types must contain at least 2 types'));
-        AbstractType::createFromTypes([new StringType(), new StringType()]);
-    }
-
-    /**
-     * @throws TypeException
-     * @return void
-     */
     public function testCreateFromTypesWithMultipleTypesContainingInvalidElement(): void
     {
         $this->expectExceptionObject(new TypeException(
             'Invalid types value given. Every element must be an instance of: Jojo1981\PhpTypes\TypeInterface.'
         ));
         AbstractType::createFromTypes([new NullType(), new IntegerType(), 'text']);
-    }
-
-    /**
-     * @throws TypeException
-     * @return void
-     */
-    public function testCreateFromTypesWithMultipleTypesContainingVoid(): void
-    {
-        $this->expectExceptionObject(new TypeException(
-            'Invalid types value given. Element of void type found, a multi type can not contain a Jojo1981\PhpTypes\VoidType.'
-        ));
-        AbstractType::createFromTypes([new NullType(), new VoidType()]);
     }
 
     /**
@@ -157,17 +135,8 @@ final class AbstractTypeTest extends TestCase
      */
     public function testCreateFromTypes(): void
     {
-        $multiType1 = AbstractType::createFromTypes([new ObjectType(), new StringType()]);
-        self::assertEquals([new ObjectType(), new StringType()], $multiType1->getTypes());
-
-        $multiType2 = AbstractType::createFromTypes([$multiType1]);
-        self::assertEquals([new ObjectType(), new StringType()], $multiType2->getTypes());
-
-        $multiType3 = AbstractType::createFromTypes([$multiType1, new StringType()]);
-        self::assertEquals([new ObjectType(), new StringType()], $multiType3->getTypes());
-
-        $multiType4 = AbstractType::createFromTypes([$multiType1, new IntegerType()]);
-        self::assertEquals([new ObjectType(), new StringType(), new IntegerType()], $multiType4->getTypes());
+        $multiType = AbstractType::createFromTypes([new ObjectType(), new StringType()]);
+        self::assertEquals([new ObjectType(), new StringType()], $multiType->getTypes());
     }
 
     /**

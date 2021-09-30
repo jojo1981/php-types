@@ -87,7 +87,7 @@ final class MultiTypeParserTest extends TestCase
     {
         return [
             ['string | int', new MultiType([new StringType(), new IntegerType()])],
-            ["int\n|| string \t| int\n", new MultiType([new IntegerType(), new StringType()])],
+            ["int\n|| string \t| bool\n", new MultiType([new IntegerType(), new StringType(), new BooleanType()])],
             ['int|string|stdClass', new MultiType([new IntegerType(), new StringType(), new ClassType(new ClassName(stdClass::class))])],
             ['Jojo1981\PhpTypes\TestSuite\Fixture\InterfaceTestEntity|bool', new MultiType([new ClassType(new ClassName(InterfaceTestEntity::class)), new BooleanType()])]
         ];

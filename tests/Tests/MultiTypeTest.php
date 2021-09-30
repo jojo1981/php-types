@@ -57,6 +57,56 @@ final class MultiTypeTest extends TestCase
     }
 
     /**
+     * @return void
+     * @throws TypeException
+     */
+    public function testEmptyTypesShouldThrowAnException(): void
+    {
+        $this->expectExceptionObject(new TypeException('Invalid type values given, types can not be empty'));
+        new MultiType([]);
+    }
+
+    /**
+     * @return void
+     * @throws TypeException
+     */
+    public function testOneTypeShouldThrowAnException(): void
+    {
+        $this->expectExceptionObject(new TypeException('Invalid type values given, types must contain at least 2 types'));
+        new MultiType([new StringType()]);
+    }
+
+    /**
+     * @return void
+     * @throws TypeException
+     */
+    public function testTypesWhichHasAnInvalidTypeShouldThrowAnException(): void
+    {
+        $this->expectExceptionObject(new TypeException('Invalid types value given. Every element must be an instance of: Jojo1981\PhpTypes\TypeInterface.'));
+        new MultiType([new StringType(), new TestEntity()]);
+    }
+
+    /**
+     * @return void
+     * @throws TypeException
+     */
+    public function testTypesWhichHasMultiTypeShouldThrowAnException(): void
+    {
+        $this->expectExceptionObject(new TypeException('Invalid types value given. Element of  multi type found, a multi type can not contain an instance of Jojo1981\PhpTypes\MultiType.'));
+        new MultiType([new StringType(), new MultiType([new StringType(), new IntegerType()])]);
+    }
+
+    /**
+     * @return void
+     * @throws TypeException
+     */
+    public function testTypesWhichHasDuplicatedTypeShouldThrowAnException(): void
+    {
+        $this->expectExceptionObject(new TypeException('Invalid type values given, value: string is already included. Types must be unique no duplicates are allowed.'));
+        new MultiType([new StringType(), new IntegerType(), new StringType()]);
+    }
+
+    /**
      * @throws ExpectationFailedException
      * @throws InvalidArgumentException
      * @return void
@@ -86,7 +136,7 @@ final class MultiTypeTest extends TestCase
      */
     public function testIsCompound(): void
     {
-        self::assertFalse($this->type->isCompound());
+        self::assertTrue($this->type->isCompound());
         self::assertNotInstanceOf(AbstractCompoundType::class, $this->type);
     }
 
@@ -147,18 +197,7 @@ final class MultiTypeTest extends TestCase
         self::assertTrue($this->type->isEqual($this->type));
         self::assertTrue($this->type->isEqual(new MultiType([new NullType(), new IntegerType()])));
         self::assertTrue($this->type->isEqual(new MultiType([new IntegerType(), new NullType()])));
-        self::assertTrue(
-            (new MultiType([new CallableType(), new ObjectType()]))
-                ->isEqual(new MultiType([new ObjectType(), new CallableType()]))
-        );
-        self::assertTrue(
-            (new MultiType([new MultiType([new StringType(), new IntegerType()]), new CallableType(), new ObjectType()]))
-                ->isEqual(new MultiType([new StringType(), new IntegerType(), new MultiType([new ObjectType(), new CallableType()])]))
-        );
-        self::assertTrue(
-            (new MultiType([new MultiType([new StringType(), new MultiType([new StringType(), new ObjectType(), new NullType()]), new IntegerType()]), new CallableType(), new ObjectType()]))
-                ->isEqual(new MultiType([new StringType(), new IntegerType(), new NullType(), new MultiType([new ObjectType(), new CallableType()])]))
-        );
+        self::assertTrue((new MultiType([new CallableType(), new ObjectType()]))->isEqual(new MultiType([new ObjectType(), new CallableType()])));
 
         self::assertFalse(
             (new MultiType([new CallableType(), new ObjectType()]))
@@ -192,14 +231,6 @@ final class MultiTypeTest extends TestCase
             [new CallableType(), new ObjectType()],
             (new MultiType([new CallableType(), new ObjectType()]))->getTypes()
         );
-        self::assertEquals(
-            [new StringType(), new IntegerType(), new ObjectType(), new CallableType()],
-            (new MultiType([new MultiType([new StringType(), new IntegerType()]), new ObjectType(), new CallableType()]))->getTypes()
-        );
-        self::assertEquals(
-            [new StringType(), new ObjectType(), new NullType(), new IntegerType(), new CallableType()],
-            (new MultiType([new MultiType([new StringType(), new MultiType([new StringType(), new ObjectType(), new NullType()]), new IntegerType()]), new CallableType(), new ObjectType()]))->getTypes()
-        );
         self::assertNotEquals(
             [new NullType(), new ObjectType(), new CallableType()],
             (new MultiType([new CallableType(), new ObjectType()]))->getTypes()
@@ -219,7 +250,6 @@ final class MultiTypeTest extends TestCase
         self::assertTrue($this->type->isAssignableType(new MultiType([new IntegerType(), new NullType()])));
         self::assertTrue($this->type->isAssignableType(new IntegerType()));
         self::assertTrue($this->type->isAssignableType(new NullType()));
-
         self::assertFalse($this->type->isAssignableType(new ArrayType()));
         self::assertFalse($this->type->isAssignableType(new BooleanType()));
         self::assertFalse($this->type->isAssignableType(new CallableType()));
@@ -232,6 +262,8 @@ final class MultiTypeTest extends TestCase
         self::assertFalse($this->type->isAssignableType(new ResourceType()));
         self::assertFalse($this->type->isAssignableType(new StringType()));
         self::assertFalse($this->type->isAssignableType(new VoidType()));
+        self::assertTrue((new MultiType([new StringType(), new VoidType()]))->isAssignableType(new VoidType()));
+        self::assertTrue((new MultiType([new StringType(), new VoidType()]))->isAssignableType(new StringType()));
     }
 
     /**
@@ -261,5 +293,18 @@ final class MultiTypeTest extends TestCase
         self::assertFalse($this->type->isAssignableValue(fopen(__FILE__, 'rb')));
         self::assertFalse($this->type->isAssignableValue(''));
         self::assertFalse($this->type->isAssignableValue('text'));
+    }
+
+    /**
+     * @return void
+     * @throws InvalidArgumentException
+     * @throws TypeException
+     * @throws ExpectationFailedException
+     */
+    public function testStringRepresentation(): void
+    {
+        self::assertEquals('int|null', (string) new MultiType([new IntegerType(), new NullType()]));
+        self::assertEquals('int|string|void', (string) new MultiType([new IntegerType(), new StringType(), new VoidType()]));
+        self::assertEquals('bool|Jojo1981\PhpTypes\TestSuite\Fixture\TestEntity', (string) new MultiType([new BooleanType(), new ClassType(new ClassName(TestEntity::class))]));
     }
 }
