@@ -280,8 +280,8 @@ final class ArrayTypeTest extends TestCase
         self::assertEquals('string[]', (string) new ArrayType(new StringType()));
         self::assertEquals('array', (string) new ArrayType(null, new IntegerType()));
         self::assertEquals('object[]', (string) new ArrayType(new ObjectType(), new IntegerType()));
-        self::assertEquals('array<string,\Jojo1981\PhpTypes\TestSuite\Fixture\TestEntity>', (string) new ArrayType(new ClassType(new ClassName(TestEntity::class)), new StringType()));
-        self::assertEquals('\Jojo1981\PhpTypes\TestSuite\Fixture\TestEntity[]', (string) new ArrayType(new ClassType(new ClassName(TestEntity::class))));
-        self::assertEquals('\Jojo1981\PhpTypes\TestSuite\Fixture\TestEntity[]', (string) new ArrayType(new ClassType(new ClassName(TestEntity::class)), new IntegerType()));
+        self::assertEquals('array<string,Jojo1981\PhpTypes\TestSuite\Fixture\TestEntity>', (string) new ArrayType(new ClassType(new ClassName(TestEntity::class)), new StringType()));
+        self::assertEquals('Jojo1981\PhpTypes\TestSuite\Fixture\TestEntity[]', (string) new ArrayType(new ClassType(new ClassName(TestEntity::class))));
+        self::assertEquals('Jojo1981\PhpTypes\TestSuite\Fixture\TestEntity[]', (string) new ArrayType(new ClassType(new ClassName(TestEntity::class)), new IntegerType()));
     }
 }

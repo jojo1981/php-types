@@ -64,8 +64,8 @@ final class ClassNameTest extends TestCase
     {
         $className = new ClassName('Test');
         self::assertSame('Test', $className->getShortName());
-        self::assertSame('\Test', $className->getFqcn());
-        self::assertSame('\\', $className->getNamespace());
+        self::assertSame('Test', $className->getFqcn());
+        self::assertSame('', $className->getNamespace());
         self::assertTrue($className->isInGlobalNameSpace());
         self::assertTrue($className->isEqual($className));
         self::assertTrue($className->isEqual(new ClassName('Test')));
@@ -83,11 +83,30 @@ final class ClassNameTest extends TestCase
     {
         $className = new ClassName('\Test\TestClass');
         self::assertSame('TestClass', $className->getShortName());
-        self::assertSame('\Test\TestClass', $className->getFqcn());
-        self::assertSame('\Test', $className->getNamespace());
+        self::assertSame('Test\TestClass', $className->getFqcn());
+        self::assertSame('Test', $className->getNamespace());
         self::assertFalse($className->isInGlobalNameSpace());
         self::assertTrue($className->isEqual($className));
         self::assertTrue($className->isEqual(new ClassName('Test\TestClass')));
+        self::assertFalse($className->isEqual(new ClassName('OtherTest')));
+        self::assertFalse($className->exists());
+    }
+
+    /**
+     * @throws ExpectationFailedException
+     * @throws InvalidArgumentException
+     * @throws ValueException
+     * @return void
+     */
+    public function testClassInSubSubNamespace(): void
+    {
+        $className = new ClassName('Test\MyTest\TestClass');
+        self::assertSame('TestClass', $className->getShortName());
+        self::assertSame('Test\MyTest\TestClass', $className->getFqcn());
+        self::assertSame('Test\MyTest', $className->getNamespace());
+        self::assertFalse($className->isInGlobalNameSpace());
+        self::assertTrue($className->isEqual($className));
+        self::assertTrue($className->isEqual(new ClassName('Test\MyTest\TestClass')));
         self::assertFalse($className->isEqual(new ClassName('OtherTest')));
         self::assertFalse($className->exists());
     }

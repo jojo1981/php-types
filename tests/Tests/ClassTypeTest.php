@@ -69,7 +69,7 @@ final class ClassTypeTest extends TestCase
      */
     public function testWithNotExistingClass(): void
     {
-        $this->expectExceptionObject(new TypeException('Class: `\NotExistingClass` doesn\'t exists'));
+        $this->expectExceptionObject(new TypeException('Class: `NotExistingClass` doesn\'t exists'));
         $this->createClassType('NotExistingClass');
     }
 
@@ -80,7 +80,7 @@ final class ClassTypeTest extends TestCase
      */
     public function testGetName(): void
     {
-        self::assertSame('\\' . __CLASS__, $this->type->getName());
+        self::assertSame(__CLASS__, $this->type->getName());
     }
 
     /**

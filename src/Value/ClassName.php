@@ -59,7 +59,7 @@ final class ClassName
      */
     public function getFqcn(): string
     {
-        return self::NAMESPACE__SEPARATOR . implode(self::NAMESPACE__SEPARATOR, $this->parts);
+        return implode(self::NAMESPACE__SEPARATOR, $this->parts);
     }
 
     /**
@@ -70,7 +70,7 @@ final class ClassName
         $parts = $this->parts;
         array_pop($parts);
 
-        return self::NAMESPACE__SEPARATOR . implode(self::NAMESPACE__SEPARATOR, $parts);
+        return implode(self::NAMESPACE__SEPARATOR, $parts);
     }
 
     /**
