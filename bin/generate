@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+CLASSPATH=".:/usr/local/lib/antlr-4.9.2-complete.jar:$CLASSPATH"
+
+java -Xmx2048M -cp "./resources/antlr.jar:$CLASSPATH" org.antlr.v4.Tool -listener -visitor -Dlanguage=PHP -package Jojo1981\\PhpTypes\\Parser\\Parser -Xexact-output-dir -o ./src/Parser/Parser ./resources/Expression.g4

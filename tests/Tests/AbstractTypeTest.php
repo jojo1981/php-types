@@ -9,6 +9,7 @@
  */
 namespace Jojo1981\PhpTypes\TestSuite\Tests;
 
+use Antlr\Antlr4\Runtime\Error\Exceptions\RecognitionException;
 use ArrayIterator;
 use Jojo1981\PhpTypes\AbstractType;
 use Jojo1981\PhpTypes\ArrayType;
@@ -48,16 +49,12 @@ final class AbstractTypeTest extends TestCase
 {
     /**
      * @return void
-     * @throws ValueException
+     * @throws RecognitionException
      * @throws RuntimeException
-     * @throws TypeException
      */
     public function testCreateFromNameWithInvalidName(): void
     {
-        $this->expectExceptionObject(new TypeException(
-            'Invalid type: `InvalidName` given. Valid types are [bool, boolean, int, integer, number, real, double, ' .
-            'float, string, text, array, object, callable, callback, iterable, resource, null, void, mixed]'
-        ));
+        $this->expectExceptionObject(new TypeException('Class: `InvalidName` doesn\'t exists'));
         AbstractType::createFromTypeName('InvalidName');
     }
 
@@ -69,8 +66,7 @@ final class AbstractTypeTest extends TestCase
      * @return void
      * @throws InvalidArgumentException
      * @throws RuntimeException
-     * @throws TypeException
-     * @throws ValueException
+     * @throws RecognitionException
      * @throws ExpectationFailedException
      */
     public function testCreateFromName(string $typeName, TypeInterface $expectedType): void

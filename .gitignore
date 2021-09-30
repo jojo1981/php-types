@@ -1,4 +1,5 @@
-/bin
+/bin/*
+!/bin/generate
 /build
 /var
 /vendor

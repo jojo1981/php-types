@@ -9,28 +9,18 @@
  */
 namespace Jojo1981\PhpTypes;
 
+use Antlr\Antlr4\Runtime\Error\Exceptions\RecognitionException;
 use Jojo1981\PhpTypes\Exception\TypeException;
-use Jojo1981\PhpTypes\Parser\ArrayTypeParser;
-use Jojo1981\PhpTypes\Parser\MultiTypeParser;
+use Jojo1981\PhpTypes\Parser\Parser;
 use Jojo1981\PhpTypes\Value\ClassName;
 use Jojo1981\PhpTypes\Value\Exception\ValueException;
 use RuntimeException;
-use function class_exists;
 use function get_class;
 use function gettype;
-use function implode;
-use function interface_exists;
 use function is_a;
 use function is_callable;
 use function is_iterable;
 use function is_object;
-use function preg_replace;
-use function sprintf;
-use function stripos;
-use function strpos;
-use function strtolower;
-use function substr;
-use function trim;
 
 /**
  * Abstract factory pattern implemented here.
@@ -39,29 +29,6 @@ use function trim;
  */
 abstract class AbstractType implements TypeInterface
 {
-    /** @var string[] */
-    private const VALID_TYPE_NAMES = [
-        'bool',
-        'boolean',
-        'int',
-        'integer',
-        'number',
-        'real',
-        'double',
-        'float',
-        'string',
-        'text',
-        'array',
-        'object',
-        'callable',
-        'callback',
-        'iterable',
-        'resource',
-        'null',
-        'void',
-        'mixed'
-    ];
-
     /**
      * @return bool
      */
@@ -211,68 +178,12 @@ abstract class AbstractType implements TypeInterface
     /**
      * @param string $typeName
      * @return TypeInterface
-     * @throws ValueException
+     * @throws RecognitionException
      * @throws RuntimeException
-     * @throws TypeException
      */
     final public static function createFromTypeName(string $typeName): TypeInterface
     {
-        $typeName = preg_replace('/\s+/', '', trim($typeName));
-        switch (strtolower($typeName)) {
-            case 'bool':
-            case 'boolean':
-                return new BooleanType();
-            case 'int':
-            case 'integer':
-                return new IntegerType();
-            case 'number':
-            case 'real':
-            case 'double':
-            case 'float':
-                return new FloatType();
-            case 'string':
-            case 'text':
-                return new StringType();
-            case 'array':
-                return new ArrayType();
-            case 'object':
-                return new ObjectType();
-            case 'callable':
-            case 'callback':
-                return new CallableType();
-            case 'iterable':
-                return new IterableType();
-            case 'resource':
-                return new ResourceType();
-            case 'null':
-                return new NullType();
-            case 'void':
-                return new VoidType();
-            case 'mixed':
-                return new MixedType();
-        }
-
-        if (!empty($typeName) && false !== strpos($typeName, '|')) {
-            return MultiTypeParser::parse($typeName);
-        }
-
-        if (0 === stripos($typeName, 'array')) {
-            return ArrayTypeParser::parse($typeName);
-        }
-
-        if ('[]' === substr($typeName, -2)) {
-            return new ArrayType(self::createFromTypeName(substr($typeName, 0, -2)));
-        }
-
-        if (class_exists($typeName) || interface_exists($typeName)) {
-            return new ClassType(new ClassName($typeName));
-        }
-
-        throw new TypeException(sprintf(
-            'Invalid type: `%s` given. Valid types are [%s]',
-            $typeName,
-            implode(', ', self::VALID_TYPE_NAMES)
-        ));
+        return (new Parser())->parse($typeName);
     }
 
     /**
