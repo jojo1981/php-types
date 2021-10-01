@@ -9,12 +9,10 @@
  */
 namespace Jojo1981\PhpTypes;
 
-use Antlr\Antlr4\Runtime\Error\Exceptions\RecognitionException;
 use Jojo1981\PhpTypes\Exception\TypeException;
 use Jojo1981\PhpTypes\Parser\Parser;
 use Jojo1981\PhpTypes\Value\ClassName;
 use Jojo1981\PhpTypes\Value\Exception\ValueException;
-use RuntimeException;
 use function get_class;
 use function gettype;
 use function is_a;
@@ -178,8 +176,7 @@ abstract class AbstractType implements TypeInterface
     /**
      * @param string $typeName
      * @return TypeInterface
-     * @throws RecognitionException
-     * @throws RuntimeException
+     * @throws TypeException
      */
     final public static function createFromTypeName(string $typeName): TypeInterface
     {
@@ -189,9 +186,8 @@ abstract class AbstractType implements TypeInterface
     /**
      * @param mixed $value
      * @return TypeInterface
-     * @throws TypeException
      * @throws ValueException
-     * @throws RuntimeException
+     * @throws TypeException
      */
     final public static function createFromValue($value): TypeInterface
     {

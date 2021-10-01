@@ -15,12 +15,15 @@ use Antlr\Antlr4\Runtime\Error\BailErrorStrategy;
 use Antlr\Antlr4\Runtime\Error\Exceptions\RecognitionException;
 use Antlr\Antlr4\Runtime\InputStream;
 use Antlr\Antlr4\Runtime\TokenStream;
+use Jojo1981\PhpTypes\Exception\TypeException;
 use Jojo1981\PhpTypes\Parser\Listener\ThrowingErrorListener;
 use Jojo1981\PhpTypes\Parser\Parser\ExpressionLexer;
 use Jojo1981\PhpTypes\Parser\Parser\ExpressionParser;
 use Jojo1981\PhpTypes\Parser\Visitor\CreateTypeVisitor;
 use Jojo1981\PhpTypes\TypeInterface;
 use RuntimeException;
+use Throwable;
+use function sprintf;
 
 /**
  * @internal
@@ -37,16 +40,19 @@ final class Parser
     /**
      * @param string $expression
      * @return TypeInterface
-     * @throws RuntimeException
-     * @throws RecognitionException
+     * @throws TypeException
      */
     public function parse(string $expression): TypeInterface
     {
-        $lexer = $this->getLexer(InputStream::fromString($expression));
-        $parser = $this->getParser(new CommonTokenStream($lexer));
-        $cst = $parser->expression();
+        try {
+            $lexer = $this->getLexer(InputStream::fromString($expression));
+            $parser = $this->getParser(new CommonTokenStream($lexer));
+            $cst = $parser->expression();
 
-        return $cst->accept(new CreateTypeVisitor());
+            return $cst->accept(new CreateTypeVisitor());
+        } catch (Throwable $exception) {
+            throw new TypeException(sprintf('Could not parse expression: `%s`. %s', $expression, $exception->getMessage()));
+        }
     }
 
     /**

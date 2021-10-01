@@ -9,7 +9,6 @@
  */
 namespace Jojo1981\PhpTypes\TestSuite\Tests\Parser;
 
-use Antlr\Antlr4\Runtime\Error\Exceptions\RecognitionException;
 use Jojo1981\PhpTypes\ArrayType;
 use Jojo1981\PhpTypes\BooleanType;
 use Jojo1981\PhpTypes\CallableType;
@@ -43,7 +42,6 @@ final class ParserTest extends TestCase
     /**
      * @return void
      * @throws InvalidArgumentException
-     * @throws RecognitionException
      * @throws RuntimeException
      * @throws TypeException
      * @throws ValueException
@@ -63,8 +61,7 @@ final class ParserTest extends TestCase
      * @param TypeInterface $expectedType
      * @return void
      * @throws InvalidArgumentException
-     * @throws RecognitionException
-     * @throws RuntimeException
+     * @throws TypeException
      * @throws ExpectationFailedException
      */
     public function testParse(string $expression, TypeInterface $expectedType): void
