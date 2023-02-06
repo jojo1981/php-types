@@ -9,12 +9,12 @@ PHP types library which contains value classes which represent the php types
 
 Author: Joost Nijhuis <[jnijhuis81@gmail.com](mailto:jnijhuis81@gmail.com)>
 
-This library has some value classes which represent a PHP type.  
-These value classes can be constructed based on the PHP type name or based on a value.  
-There are 2 pseudo type classes: `Jojo1981\PhpTypes\MixedType` and `Jojo1981\PhpTypes\MultiType` which will function as composite.  
-Also an abstract factory class is included: `Jojo1981\PhpTypes\AbstractType`.
+This library has some value classes which represent a PHP type.
+These value classes can be constructed based on the PHP type name or based on a value.
+There are 2 pseudo type classes: `Jojo1981\PhpTypes\MixedType` and `Jojo1981\PhpTypes\MultiType` which will function as composite.
+Also, an abstract factory class is included: `Jojo1981\PhpTypes\AbstractType`.
 
-The following types are supported, with there aliases:
+The following types are supported, with their aliases:
 
 -  array
 -  bool (boolean)
