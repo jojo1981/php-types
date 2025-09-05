@@ -37,7 +37,7 @@ class ObjectType extends AbstractCompoundType
      * @param mixed $value
      * @return bool
      */
-    public function isAssignableValue($value): bool
+    public function isAssignableValue(mixed $value): bool
     {
         if ($value instanceof Closure) {
             return false;

@@ -36,7 +36,7 @@ final class FloatType extends AbstractNumberType
      * @param mixed $value
      * @return bool
      */
-    public function isAssignableValue($value): bool
+    public function isAssignableValue(mixed $value): bool
     {
         return is_float($value);
     }

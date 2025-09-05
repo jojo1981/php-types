@@ -104,7 +104,7 @@ interface TypeInterface
      * @param mixed $value
      * @return bool
      */
-    public function isAssignableValue($value): bool;
+    public function isAssignableValue(mixed $value): bool;
 
     /**
      * @return bool
@@ -116,4 +116,9 @@ interface TypeInterface
      * @return bool
      */
     public function isEqual(TypeInterface $type): bool;
+
+    /**
+     * @return string
+     */
+    public function __toString(): string;
 }

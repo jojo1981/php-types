@@ -34,7 +34,7 @@ final class VoidType extends AbstractType
      * @param mixed $value
      * @return bool
      */
-    public function isAssignableValue($value): bool
+    public function isAssignableValue(mixed $value): bool
     {
         return false;
     }

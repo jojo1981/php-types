@@ -83,7 +83,7 @@ final class MultiType extends AbstractPseudoType
      * @param mixed $value
      * @return bool
      */
-    public function isAssignableValue($value): bool
+    public function isAssignableValue(mixed $value): bool
     {
         foreach ($this->types as $type) {
             if ($type->isAssignableValue($value)) {

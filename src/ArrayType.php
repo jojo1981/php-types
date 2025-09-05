@@ -86,7 +86,7 @@ class ArrayType extends AbstractCompoundType
      * @param mixed $value
      * @return bool
      */
-    public function isAssignableValue($value): bool
+    public function isAssignableValue(mixed $value): bool
     {
         return is_array($value);
     }
