@@ -14,6 +14,7 @@ use Jojo1981\PhpTypes\Value\ClassName;
 use ReflectionClass;
 use ReflectionException;
 use function is_a;
+use function is_object;
 use function is_subclass_of;
 use function sprintf;
 
@@ -81,13 +82,13 @@ final class ClassType extends ObjectType
      * @param mixed $value
      * @return bool
      */
-    public function isAssignableValue($value): bool
+    public function isAssignableValue(mixed $value): bool
     {
         if (!parent::isAssignableValue($value)) {
             return false;
         }
 
-        return is_a($value, $this->className->getFqcn());
+        return is_object($value) && is_a($value, $this->className->getFqcn());
     }
 
     /**
@@ -122,7 +123,6 @@ final class ClassType extends ObjectType
     private function isClassTypeAssignableToThisClassType(ClassType $type): bool
     {
         return $this->className->isEqual($type->getClassName())
-            || is_subclass_of($type->getClassName()->getFqcn(), $this->className->getFqcn())
-            || is_a($type->getClassName()->getFqcn(), $this->className->getFqcn());
+            || is_subclass_of($type->getClassName()->getFqcn(), $this->className->getFqcn());
     }
 }

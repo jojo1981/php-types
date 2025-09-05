@@ -1,0 +1,4 @@
+parameters:
+  treatPhpDocTypesAsCertain: false
+  excludePaths:
+    - src/Parser/Parser/*

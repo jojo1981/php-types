@@ -35,7 +35,7 @@ final class MixedType extends AbstractPseudoType
      * @param mixed $value
      * @return bool
      */
-    public function isAssignableValue($value): bool
+    public function isAssignableValue(mixed $value): bool
     {
         return true;
     }
