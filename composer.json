@@ -18,7 +18,7 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require": {
-    "php": "^8.0",
+    "php": "^8.0|^8.1|^8.2|^8.3|^8.4",
     "antlr/antlr4-php-runtime": "^0.8",
     "antlr4/antlr4": "^4.7"
   },
