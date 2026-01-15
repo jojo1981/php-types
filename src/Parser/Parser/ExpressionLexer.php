@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Generated from ./resources/Expression.g4 by ANTLR 4.11.1
+ * Generated from ./resources/Expression.g4 by ANTLR 4.13.1
  */
 
 namespace Jojo1981\PhpTypes\Parser\Parser {
@@ -249,7 +249,7 @@ namespace Jojo1981\PhpTypes\Parser\Parser {
 				return;
 			}
 
-			RuntimeMetaData::checkVersion('4.11.1', RuntimeMetaData::VERSION);
+			RuntimeMetaData::checkVersion('4.13.1', RuntimeMetaData::VERSION);
 
 			$atn = (new ATNDeserializer())->deserialize(self::SERIALIZED_ATN);
 
