@@ -1,4 +1,5 @@
 parameters:
   treatPhpDocTypesAsCertain: false
   excludePaths:
-    - src/Parser/Parser/*
+    analyse:
+      - src/Parser/Parser/*
