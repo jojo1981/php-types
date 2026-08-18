@@ -33,6 +33,7 @@ use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use SebastianBergmann\RecursionContext\InvalidArgumentException;
+use function sprintf;
 
 /**
  * @package Jojo1981\PhpTypes\TestSuite\Tests\Parser
@@ -67,6 +68,37 @@ final class ParserTest extends TestCase
     public function testParse(string $expression, TypeInterface $expectedType): void
     {
         self::assertEquals($expectedType, (new Parser())->parse($expression));
+    }
+
+    /**
+     * @dataProvider getTestParseWithInvalidExpressionTestData
+     *
+     * @param string $expression
+     * @return void
+     * @throws TypeException
+     */
+    public function testParseWithInvalidExpressionThrowsTypeException(string $expression): void
+    {
+        $this->expectException(TypeException::class);
+        $this->expectExceptionMessage(sprintf('Could not parse expression: `%s`.', $expression));
+        (new Parser())->parse($expression);
+    }
+
+    /**
+     * @return array[]
+     */
+    public function getTestParseWithInvalidExpressionTestData(): array
+    {
+        return [
+            [''],
+            ['int|'],
+            ['|string'],
+            ['array<'],
+            ['array<int,'],
+            ['array<int, string'],
+            ['array<>'],
+            ['#invalid']
+        ];
     }
 
     /**
